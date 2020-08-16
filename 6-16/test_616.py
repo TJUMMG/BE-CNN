@@ -32,7 +32,6 @@ def downscale(images):
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 config = tf.ConfigProto(allow_soft_placement=True) 
-#config.gpu_options.per_process_gpu_memory_fraction = 0.5
 config.gpu_options.allow_growth = True 
 
 x = tf.placeholder(tf.float32, [None,436, 1024, 3])
