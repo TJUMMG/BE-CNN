@@ -42,7 +42,7 @@ sess.run(init)
 saver = tf.train.Saver()
 saver.restore(sess, './latest')  # model name
 
-pics = glob.glob('../test.png') # input images directory
+pics = glob.glob('../test/*') # input images directory
 
 tt=0
 for i in tqdm(range(len(pics))):
