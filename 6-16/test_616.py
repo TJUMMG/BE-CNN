@@ -1,6 +1,5 @@
 import numpy as np
 import os
-#os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 import cv2
 import glob
 import tensorflow as tf
@@ -8,6 +7,9 @@ import sys
 import time
 from tqdm import tqdm
 from becnn import becnn
+
+if not os.path.exists('results_616'):  # output directory
+    os.mkdir('results_616')
 
 def normalize(images):
     return np.array([image/65535.0 for image in images])
@@ -45,24 +47,17 @@ sess.run(init)
 saver = tf.train.Saver()
 saver.restore(sess, './latest')
 
-#pic = './677.png'
-pics = glob.glob('../Source50/*')
+pics = glob.glob('../test/*')  # input images directory
 
 tt=0
-for i in tqdm(range(len(pics))):#
-#for i in range(1):#len(pics)):#
+for i in tqdm(range(len(pics))):
     x_t1 = cv2.imread(pics[i],3)
-    #x_t1 = cv2.imread(pic,3)
     x_t1n = x_t1[np.newaxis,:,:,:]
-    #print raw
-    low_bit = downscale(x_t1n)
-    '''
-    cv2.imwrite('tmp.png',low_bit[0])
 
+    low_bit = downscale(x_t1n)
+    
     starttime=time.time()
-    x_t1 = cv2.imread('tmp.png',3)
-    x_t1n = x_t1[np.newaxis,:,:,:]
-    '''
+    
     low_bit_float = normalize(low_bit)
 
     fake = sess.run(model.imitation,
@@ -70,7 +65,6 @@ for i in tqdm(range(len(pics))):#
 
     
     full_name = pics[i].split('/')[-1]
-    #full_name = pic.split('/')[-1]
     pure_name = full_name.split('.')[0]
     clipped = np.clip(fake[0],0,1)
     im = np.uint16(clipped*65535.0)
@@ -78,4 +72,3 @@ for i in tqdm(range(len(pics))):#
     cv2.imwrite('results_616/'+pure_name+'_becnn_616.png',im)
 
     print time.time()-starttime
-
