@@ -7,7 +7,7 @@ import sys
 from tqdm import tqdm
 from becnn import becnn
 
-if not os.path.exists('results_816'):
+if not os.path.exists('results_816'):  # output directory
     os.mkdir('results_816')
 
 def normalize(images):
@@ -15,7 +15,6 @@ def normalize(images):
     
 
 def downscale(images):
-    #print images
     downs = [[[[0 for p in range(3)] for k in range(1024)] for j in range(436)] for i in range(len(images))]
     for ii in range(len(images)):
         for j in range(len(images[ii])):
@@ -30,7 +29,6 @@ def downscale(images):
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.ConfigProto(allow_soft_placement=True) 
-#config.gpu_options.per_process_gpu_memory_fraction = 0.5
 config.gpu_options.allow_growth = True 
 
 
@@ -46,18 +44,18 @@ sess.run(init)
 saver = tf.train.Saver()
 saver.restore(sess, './latest')
 
-#pic = './677.png'
-pics = glob.glob('../Source50/*')
+pics = glob.glob('../test/*')  # input images directory
 
     
-for i in tqdm(range(len(pics))):#
-#for i in range(1):#len(pics)):#
+for i in tqdm(range(len(pics))):
     x_t1 = cv2.imread(pics[i],3)
-    #x_t1 = cv2.imread(pic,3)
     x_t1n = x_t1[np.newaxis,:,:,:]
     raw = normalize(x_t1n)
-    #print raw
+
     low_bit = downscale(x_t1n)
+    
+    starttime=time.time()
+    
     low_bit_float = normalize(low_bit)
 
     fake = sess.run(model.imitation,
@@ -65,13 +63,11 @@ for i in tqdm(range(len(pics))):#
 
     
     full_name = pics[i].split('/')[-1]
-    #full_name = pic.split('/')[-1]
     pure_name = full_name.split('.')[0]
     clipped = np.clip(fake[0],0,1)
     im = np.uint16(clipped*65535.0)
     imc = np.clip(im,0,65535)
     
-    #cv2.imwrite('result_dsp816/'+pure_name+'_dsp_816.png',imc)
     cv2.imwrite('./results_816/'+pure_name+'_becnn_816.png',imc)
         
-        
+    print time.time()-starttime    
