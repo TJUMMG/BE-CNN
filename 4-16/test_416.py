@@ -9,7 +9,7 @@ import time
 from tqdm import tqdm
 from becnn import becnn
 
-if not os.path.exists('results_416'):  #output directory
+if not os.path.exists('results_416'):  # output directory
     os.mkdir('results_416')
 
 def normalize(images):
@@ -17,7 +17,6 @@ def normalize(images):
     
 
 def downscale(images):
-    #print images
     downs = [[[[0 for p in range(3)] for k in range(1024)] for j in range(436)] for i in range(len(images))]
     for ii in range(len(images)):
         for j in range(len(images[ii])):
@@ -31,7 +30,7 @@ def downscale(images):
     
 
 
-x = tf.placeholder(tf.float32, [None,436, 1024, 3])  #height width 512 768
+x = tf.placeholder(tf.float32, [None,436, 1024, 3])  # height width 436 1024
 downscaled = tf.placeholder(tf.float32, [None,436, 1024, 3])
 is_training = tf.placeholder(tf.bool, [])
 
@@ -41,18 +40,15 @@ init = tf.global_variables_initializer()
 sess.run(init)
 
 saver = tf.train.Saver()
-saver.restore(sess, './latest')  #model name
+saver.restore(sess, './latest')  # model name
 
-#pic = './677.png'
-pics = glob.glob('../Source50/*') #input images directory
+pics = glob.glob('../test.png') # input images directory
 
 tt=0
-for i in tqdm(range(len(pics))):#
-#for i in range(1):#len(pics)):#
+for i in tqdm(range(len(pics))):
     x_t1 = cv2.imread(pics[i],3)
-    #x_t1 = cv2.imread(pic,3)
     x_t1n = x_t1[np.newaxis,:,:,:]
-    #print raw
+    
     low_bit = downscale(x_t1n)
     cv2.imwrite('tmp.png',low_bit[0])
 
@@ -66,15 +62,10 @@ for i in tqdm(range(len(pics))):#
 
     
     full_name = pics[i].split('/')[-1]
-    #full_name = pic.split('/')[-1]
     pure_name = full_name.split('.')[0]
     clipped = np.clip(fake[0],0,1)
     im = np.uint16(clipped*65535.0)
     
-    #cv2.imwrite(pure_name+'_dsp_416.png',im)
-    #cv2.imwrite('result_dsp416/'+pure_name+'_dsp_416.png',im)
     cv2.imwrite('results_416/'+pure_name+'_becnn_416.png',im)  #output
 
     print time.time()-starttime
-
-        
