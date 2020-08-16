@@ -50,12 +50,10 @@ for i in tqdm(range(len(pics))):
     x_t1n = x_t1[np.newaxis,:,:,:]
     
     low_bit = downscale(x_t1n)
-    cv2.imwrite('tmp.png',low_bit[0])
-
+    
     starttime=time.time()
-    x_t1 = cv2.imread('tmp.png',3)
-    x_t1n = x_t1[np.newaxis,:,:,:]
-    low_bit_float = normalize(x_t1n)
+    
+    low_bit_float = normalize(low_bit)
 
     fake = sess.run(model.imitation,
         feed_dict={x: low_bit_float, downscaled: low_bit_float, is_training: False})
