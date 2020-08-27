@@ -2,17 +2,17 @@
 Bit-Depth Enhancement via Convolutional Neural Network
 
 # Instructions: 
-1) Install TensorFlow(GPU);
-2) Run 4-16/test_416.py to recover 16-bit images from 4-bit versions. 
-   Run 8-16/test_816.py to recover 16-bit images from 8-bit versions.
-   It will directly compress and reconstruct images from test/.
-3) Results output to results_416/ or results_816/.
-* The image size in the code needs to be changed.
+   1) Install TensorFlow(GPU);
+   2) Run 4-16/test_416.py to recover 16-bit images from 4-bit versions.\
+      Run 8-16/test_816.py to recover 16-bit images from 8-bit versions.\
+      It will directly compress and reconstruct images from test/.
+   3) Results output to results_416/ or results_816/.
+   * The image size in the code needs to be changed.
 
 *********************************************************************
 
-If you use this code, please cite the following publication:
-    Y.Su, W.Sun, J.Liu, G.Zhai, P.Jing, "Photo-realistic Image Bit-depth Enhancement via Residual Transposed Convolutional Neural Network", to appear in NEUROCOMPUTING
+If you use this code, please cite the following publication:\
+__Y.Su, W.Sun, J.Liu, G.Zhai, P.Jing, "Photo-realistic Image Bit-depth Enhancement via Residual Transposed Convolutional Neural Network", to appear in NEUROCOMPUTING__
     
 *********************************************************************
 
